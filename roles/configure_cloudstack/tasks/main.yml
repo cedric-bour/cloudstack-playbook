@@ -1,0 +1,36 @@
+- block:
+
+  - name: Check if CloudStack is already configured
+    lineinfile:
+      state: absent
+      path: /etc/cloudstack/management/db.properties
+      regexp: "^cluster.node.IP={{ hostvars[inventory_hostname].ansible_cloudbr0.ipv4.address }}"
+    check_mode: true
+    changed_when: false
+    register: cloudstack_check
+
+  - name: Configure CloudStack databases
+    shell: "cloudstack-setup-databases cloud:cloud@localhost --deploy-as=root: -i {{ hostvars[inventory_hostname].ansible_cloudbr0.ipv4.address }}"
+    when: cloudstack_check.found == 0
+
+  - name: Check if template is configured
+    stat:
+      path: /export/secondary/template/tmpl/1/3/template.properties
+    register: template_check
+
+  - name: Download qcow template
+    get_url:
+      url: "{{ template_url }}"
+      dest: "{{ template_location }}"
+    when: not template_check.stat.exists
+
+  - name: Configure template
+    shell: "/usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt \
+            -m /export/secondary -f {{ template_location }} -h kvm \
+            -o localhost -r cloud -d cloud"
+    when: not template_check.stat.exists
+
+  - name: Start CloudStack
+    shell: cloudstack-setup-management
+
+  become: true

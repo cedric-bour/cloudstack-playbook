@@ -1,0 +1,21 @@
+- block:
+
+  - name: "Ensure export directory exists" 
+    file:
+      path: "{{ item }}"
+      state: directory 
+      mode: 0777
+    with_items: "{{ exports_directories }}"
+
+  - name: Ajout du repertoires de partages
+    lineinfile:
+      path: /etc/exports
+      state: present
+      line: "{{ exports_config }}"
+    register: nfs_check
+
+  - name: Export the share
+    command: exportfs -a
+    when: nfs_check.changed
+
+  become: true

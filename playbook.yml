@@ -1,0 +1,51 @@
+- name: Installation de Cloudstack Server
+  hosts: server
+  remote_user: exploit
+  vars:
+    packages:
+      - bridge-utils
+      - cloudstack-management
+      - cloudstack-usage
+      - mysql-server
+      - nfs-kernel-server
+  roles:
+    - role: repo_cloudstack
+      tags:
+        - repo_cloudstack
+        - server
+    - role: install_packages
+      tags:
+        - install_packages
+        - server
+    - role: configure_mysql
+      tags:
+        - configure_mysql
+        - server
+    - role: configure_nfs
+      tags:
+        - configure_nfs
+        - server
+    - role: configure_cloudstack
+      tags:
+        - configure_cloudstack
+        - server
+
+- name: Installation de Cloudstack Client
+  hosts: client
+  remote_user: exploit
+  vars:
+    packages:
+      - iptables-persistent
+  roles:
+    - role: install_packages
+      tags:
+        - install_packages
+        - client
+    - role: configure_iptables
+      tags:
+        - configure_iptables
+        - client
+#    - role: configure_apparmor
+#      tags:
+#        - configure_apparmor
+#        - client

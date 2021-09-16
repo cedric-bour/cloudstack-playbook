@@ -1,0 +1,13 @@
+- block:
+
+  - name: Check if AppArmor is configured
+    stat:
+      path: /etc/apparmor.d/disable/usr.sbin.libvirtd
+    register: apparmor_check
+
+  - name: Disable AppArmor for libvirt
+    shell: "{{ item }}"
+    with_items: "{{ apparmor_libvirt_disable }}"
+    when: not apparmor_check.stat.exists
+
+  become: true

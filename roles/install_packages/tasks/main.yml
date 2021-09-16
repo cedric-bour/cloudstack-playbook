@@ -1,0 +1,11 @@
+- block:
+
+  - name: "Installation des paquets nécéssaires: {{ packages }}"
+    apt:
+      name: "{{ packages }}"
+      state: present
+      update_cache: true
+      install_recommends: true
+      autoremove: true
+
+  become: true

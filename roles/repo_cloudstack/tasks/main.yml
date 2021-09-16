@@ -1,0 +1,13 @@
+- block:
+
+  - name: Ajout de la clé Apt CloudStack
+    apt_key:
+      url: "{{ key_cloudstack }}"
+      state: present
+
+  - name: Ajout du repo Apt CloudStack
+    apt_repository:
+      repo: "{{ repo_cloudstack }}"
+      state: present
+
+  become: true

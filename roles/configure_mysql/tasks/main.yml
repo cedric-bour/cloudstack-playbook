@@ -1,0 +1,26 @@
+- block:
+
+  - name: Check if mysql is already configured
+    lineinfile:
+      state: absent
+      path: /etc/mysql/mysql.conf.d/mysqld.cnf
+      regexp: "^server_id"
+    check_mode: true
+    changed_when: false
+    register: mysql_check
+
+  - name: Configuration MySQL
+    lineinfile:
+      path: /etc/mysql/mysql.conf.d/mysqld.cnf
+      insertafter: '\[mysqld\]'
+      line: "{{ mysql_config }}"
+      state: present
+    when: mysql_check.found == 0
+
+  - name: Restart MySQL Server
+    service:
+      name: mysql
+      state: restarted
+    when: mysql_check.found == 0
+
+  become: true
