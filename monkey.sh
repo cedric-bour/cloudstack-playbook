@@ -72,8 +72,8 @@ do
   echo "Added host" $host_ip;
 done;
 
-#$cli create storagepool zoneid=$zone_id podid=$pod_id clusterid=$cluster_id name=MyNFSPrimary url=$prm_storage
-#echo "Added primary storage"
+$cli create storagepool zoneid=$zone_id podid=$pod_id clusterid=$cluster_id name=MyNFSPrimary url=$prm_storage
+echo "Added primary storage"
 
 $cli add secondarystorage zoneid=$zone_id url=$sec_storage
 echo "Added secondary storage"
