@@ -1,0 +1,9 @@
+- name: Configuration de Cloudstack
+  hosts: server
+  remote_user: exploit
+  vars:
+  roles:
+    - role: 
+      tags:
+        - 
+        - server

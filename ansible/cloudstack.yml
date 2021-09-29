@@ -1,3 +1,11 @@
+- name: Ajout du repos Cloudstack
+  hosts: all
+  remote_user: exploit
+  roles:
+    - role: cs_configure_repo
+      tags:
+        - cs_configure_repo
+
 - name: Installation de Cloudstack Server
   hosts: server
   remote_user: exploit
@@ -9,25 +17,21 @@
       - mysql-server
       - nfs-kernel-server
   roles:
-    - role: repo_cloudstack
-      tags:
-        - repo_cloudstack
-        - server
     - role: install_packages
       tags:
         - install_packages
         - server
-    - role: configure_mysql
+    - role: cs_configure_mysql
       tags:
-        - configure_mysql
+        - cs_configure_mysql
         - server
-    - role: configure_nfs
+    - role: cs_configure_nfs
       tags:
-        - configure_nfs
+        - cs_configure_nfs
         - server
-    - role: configure_cloudstack
+    - role: cs_configure_cloudstack
       tags:
-        - configure_cloudstack
+        - cs_configure_cloudstack
         - server
 
 - name: Installation de Cloudstack Client
@@ -35,17 +39,10 @@
   remote_user: exploit
   vars:
     packages:
-      - iptables-persistent
+      - qemu-kvm
+      - cloudstack-agent
   roles:
     - role: install_packages
       tags:
         - install_packages
         - client
-    - role: configure_iptables
-      tags:
-        - configure_iptables
-        - client
-#    - role: configure_apparmor
-#      tags:
-#        - configure_apparmor
-#        - client

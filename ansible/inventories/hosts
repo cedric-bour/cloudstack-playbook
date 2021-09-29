@@ -1,0 +1,9 @@
+[all:children]
+server
+client
+
+[server]
+172.16.0.254
+
+[client]
+172.16.0.254

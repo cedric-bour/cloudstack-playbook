@@ -1,5 +1,13 @@
 - block:
 
+  - name: Disable sudo password
+    lineinfile:
+      path: /etc/sudoers
+      state: present
+      regexp: '^%sudo'
+      line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+      validate: 'visudo -cf %s'
+
   - name: Check if CloudStack is already configured
     lineinfile:
       state: absent
